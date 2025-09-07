@@ -1,0 +1,39 @@
+services:
+  php:
+    build:
+      context: php-dockerfile\
+      dockerfile: Dockerfile
+    container_name: php_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app-php:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - first-network
+
+
+
+  mysql:
+    build:
+      context: mysql-dockerfile\
+      dockerfile: Dockerfile
+    container_name: db-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: redhat123
+      MYSQL_DATABASE: usuarios
+      MYSQL_USER: charlie
+      MYSQL_PASSWORD: redhat
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - first-network
+
+networks:
+  first-network:    
+
+volumes:
+  mysql_data:
