@@ -9,9 +9,10 @@ services:
     volumes:
       - ./app-php:/var/www/html
     depends_on:
-      - mysql
+       mysql:
+          condition: service_healthy
     networks:
-      - first-network
+      - my-network
 
 
 
@@ -30,14 +31,20 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - first-network
+      - my-network
+    healthcheck:
+      test:  ["CMD", "test -f var/lib/mysql/usuarios"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 networks:
-  first-network:    
+  my-network:    
     driver: bridge  
     ipam:
       config:
-        - subnet: 192.168.0.1/24 
+        - subnet: 192.168.0.0/24 
           gateway: 192.168.0.1
 
 volumes:
